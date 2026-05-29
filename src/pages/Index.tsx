@@ -33,16 +33,6 @@ interface ChatMessage {
   source?: string;
 }
 
-interface AppItem {
-  id: string;
-  name: string;
-  icon: string;
-  version: string;
-  installed: boolean;
-  category: string;
-  rating: number;
-}
-
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 const INCIDENTS: Incident[] = [
   { id: "INC-001", title: "Возгорание на объекте №12", zone: "Северный район", severity: "critical", time: "14:23", x: 28, y: 35, lat: "55.8421", lng: "37.3891" },
@@ -52,19 +42,36 @@ const INCIDENTS: Incident[] = [
   { id: "INC-005", title: "Критический сбой камеры", zone: "Южная граница", severity: "critical", time: "15:11", x: 40, y: 72, lat: "55.6234", lng: "37.5421" },
 ];
 
+interface AppItem {
+  id: string;
+  name: string;
+  icon: string;
+  version: string;
+  installed: boolean;
+  category: string;
+  rating: number;
+  developer?: string;
+}
+
 const APPS: AppItem[] = [
-  { id: "ecsu", name: "ЕЦСУ", icon: "Globe", version: "1.0.0", installed: true, category: "Безопасность", rating: 5 },
-  { id: "mqtt", name: "IoT Брокер", icon: "Wifi", version: "2.1.3", installed: true, category: "Сеть", rating: 4 },
-  { id: "reports", name: "Генератор отчётов", icon: "FileText", version: "1.2.1", installed: false, category: "Аналитика", rating: 4 },
-  { id: "monitor", name: "Системный монитор", icon: "Activity", version: "3.0.0", installed: true, category: "Система", rating: 5 },
-  { id: "vpn", name: "Secure VPN", icon: "Shield", version: "1.5.0", installed: false, category: "Безопасность", rating: 4 },
-  { id: "logger", name: "Аудит-логгер", icon: "ScrollText", version: "2.0.1", installed: false, category: "Безопасность", rating: 5 },
+  { id: "ecsu", name: "ЕЦСУ", icon: "Globe", version: "1.0.0", installed: true, category: "Безопасность", rating: 5, developer: "Николаев В.В." },
+  { id: "mqtt", name: "IoT Брокер", icon: "Wifi", version: "2.1.3", installed: true, category: "Сеть", rating: 4, developer: "Николаев В.В." },
+  { id: "reports", name: "Генератор отчётов", icon: "FileText", version: "1.2.1", installed: false, category: "Аналитика", rating: 4, developer: "Николаев В.В." },
+  { id: "monitor", name: "Системный монитор", icon: "Activity", version: "3.0.0", installed: true, category: "Система", rating: 5, developer: "Николаев В.В." },
+  { id: "vpn", name: "Secure VPN", icon: "Shield", version: "1.5.0", installed: false, category: "Безопасность", rating: 4, developer: "Николаев В.В." },
+  { id: "logger", name: "Аудит-логгер", icon: "ScrollText", version: "2.0.1", installed: false, category: "Безопасность", rating: 5, developer: "Николаев В.В." },
 ];
 
 const INITIAL_CHAT: ChatMessage[] = [
   {
     role: "ai",
-    text: "Система ЕЦСУ активирована. Все датчики в сети. Обнаружено 5 инцидентов, из них 2 критических. Чем могу помочь?",
+    text: "Добро пожаловать в ЕЦСУ. Система разработана Николаевым Владимиром Владимировичем. Для справки введите «Помощь».",
+    time: "14:20",
+    source: "Системное сообщение",
+  },
+  {
+    role: "ai",
+    text: "Система активирована. Все датчики в сети. Обнаружено 5 инцидентов, из них 2 критических. Чем могу помочь?",
     time: "14:20",
     source: "Локальные данные системы",
   },
@@ -581,6 +588,12 @@ function MarketView() {
             </div>
             <div className="text-sm font-semibold text-cyan-200 mb-1">{app.name}</div>
             <div className="text-xs text-cyan-400/50 mb-1">v{app.version} • {app.category}</div>
+            {app.developer && (
+              <div className="flex items-center gap-1 mb-1">
+                <Icon name="User" size={10} className="text-cyan-400/35" />
+                <span className="text-[10px] text-cyan-400/45">{app.developer}</span>
+              </div>
+            )}
             <div className="flex mb-3">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Icon key={i} name="Star" size={10} className={i < app.rating ? "text-yellow-400" : "text-cyan-400/20"} />
@@ -600,6 +613,16 @@ function MarketView() {
             </button>
           </div>
         ))}
+      </div>
+      <div className="glass-panel border-t border-cyan-500/20 px-4 py-2 flex-shrink-0 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Icon name="Info" size={12} className="text-cyan-400/40" />
+          <span className="text-xs text-cyan-400/40">Платформа разработана при участии Николаева В.В.</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Icon name="Copyright" size={10} className="text-cyan-400/30" />
+          <span className="text-[10px] text-cyan-400/30">2026 Николаев В.В. Все права защищены.</span>
+        </div>
       </div>
     </div>
   );
@@ -682,6 +705,28 @@ function SettingsView() {
           <SettingRow label="Модель" value="Llama 3 8B GGUF" />
           <SettingRow label="Провайдер" value="Ollama (локальный)" />
           <SettingRow label="Макс. время ответа" value="5 сек." />
+        </Section>
+        <Section title="Системный журнал">
+          <div className="glass-panel rounded-xl border neon-border overflow-hidden">
+            <div className="px-3 py-2 border-b border-cyan-500/15 flex items-center justify-between">
+              <span className="text-xs text-cyan-400/50 font-mono">~/.hybridflow/system/logs/install.log</span>
+              <Icon name="Terminal" size={12} className="text-cyan-400/40" />
+            </div>
+            <div className="p-3 space-y-1 font-mono text-[11px]">
+              {[
+                { level: "INFO", text: "HYBRID FLOW + ЕЦСУ v1.0.0. Правообладатель: Николаев В.В." },
+                { level: "INFO", text: "Инициализация ядра HF-Kernel 5.4.2 завершена." },
+                { level: "INFO", text: "IoT-брокер Mosquitto запущен на порту 1883." },
+                { level: "INFO", text: "ИИ-движок Llama 3 8B загружен успешно." },
+                { level: "INFO", text: "Монтирование зашифрованной БД SQLCipher завершено." },
+              ].map((entry, i) => (
+                <div key={i} className="flex gap-2">
+                  <span className="text-green-400/70 flex-shrink-0">[{entry.level}]</span>
+                  <span className="text-cyan-300/60">{entry.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </Section>
         <Section title="Правообладатель">
           <div className="glass-panel rounded-xl p-4 border neon-border space-y-3">
