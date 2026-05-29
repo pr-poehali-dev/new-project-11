@@ -1,3 +1,11 @@
+/**
+ * Проект: HYBRID FLOW + ЕЦСУ
+ * Описание: Гибридная ОС и система управления инцидентами
+ * Создатель и владелец: Николаев Владимир Владимирович
+ * Дата создания: 2026-05-29
+ * Лицензия: Определяется правообладателем
+ */
+
 import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
@@ -85,6 +93,10 @@ function StatusBar({ time, role }: { time: string; role: UserRole }) {
         <div className="flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-blink" />
           <span className="text-xs text-green-400/70">ОНЛАЙН</span>
+        </div>
+        <div className="flex items-center gap-1.5 border-l border-cyan-500/20 pl-4">
+          <Icon name="Copyright" size={10} className="text-cyan-400/35" />
+          <span className="text-[10px] text-cyan-400/35 tracking-wide">Николаев В.В.</span>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -669,6 +681,40 @@ function SettingsView() {
           <SettingRow label="Модель" value="Llama 3 8B GGUF" />
           <SettingRow label="Провайдер" value="Ollama (локальный)" />
           <SettingRow label="Макс. время ответа" value="5 сек." />
+        </Section>
+        <Section title="Правообладатель">
+          <div className="glass-panel rounded-xl p-4 border neon-border space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+                <Icon name="Copyright" size={16} className="text-cyan-400/70" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-cyan-200">Николаев Владимир Владимирович</div>
+                <div className="text-xs text-cyan-400/50">Создатель и владелец исключительных прав</div>
+              </div>
+            </div>
+            <div className="border-t border-cyan-500/15 pt-3 space-y-1.5">
+              <div className="flex justify-between">
+                <span className="text-xs text-cyan-400/50">Проект</span>
+                <span className="text-xs text-cyan-300/70 font-mono">HYBRID FLOW + ЕЦСУ</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-cyan-400/50">Дата создания</span>
+                <span className="text-xs text-cyan-300/70 font-mono">29.05.2026</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-cyan-400/50">Лицензия</span>
+                <span className="text-xs text-cyan-300/70 font-mono">Определяется правообладателем</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-cyan-400/50">Коммерческое использование</span>
+                <span className="text-xs text-yellow-400/80 font-mono">По согласованию</span>
+              </div>
+            </div>
+            <div className="bg-cyan-500/5 rounded-lg px-3 py-2 text-[11px] text-cyan-400/50 leading-relaxed border border-cyan-500/10">
+              Исходный код, дизайн интерфейса, документация и сопутствующие материалы защищены авторским правом.
+            </div>
+          </div>
         </Section>
       </div>
     </div>
