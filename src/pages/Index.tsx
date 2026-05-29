@@ -10,7 +10,7 @@ import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type AppView = "desktop" | "ecsu" | "files" | "market" | "settings" | "users";
+type AppView = "desktop" | "ecsu" | "files" | "market" | "settings" | "users" | "about";
 type UserRole = "admin" | "operator" | "analyst" | "guest";
 type IncidentSeverity = "critical" | "warning" | "info";
 
@@ -127,6 +127,7 @@ function Taskbar({ active, onNav }: { active: AppView; onNav: (v: AppView) => vo
     { id: "market", icon: "Store", label: "Маркетплейс" },
     { id: "users", icon: "Users", label: "Пользователи" },
     { id: "settings", icon: "Settings", label: "Настройки" },
+    { id: "about", icon: "Info", label: "Справка" },
   ];
 
   return (
@@ -757,8 +758,223 @@ function ToggleRow({ label, desc, on, onToggle }: { label: string; desc: string;
   );
 }
 
+// ─── About View ───────────────────────────────────────────────────────────────
+function AboutView() {
+  const [eulaOpen, setEulaOpen] = useState(false);
+
+  const eulaItems = [
+    "Все права на программное обеспечение, включая ОС HYBRID FLOW и систему ЕЦСУ, принадлежат Николаеву Владимиру Владимировичу.",
+    "Любое коммерческое использование, модификация или распространение компонентов проекта требует предварительного письменного согласия правообладателя.",
+    "Пользователь не имеет права удалять или изменять упоминания о правообладателе в интерфейсе или коде системы.",
+  ];
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="h-10 glass-panel border-b border-cyan-500/20 flex items-center gap-3 px-4 flex-shrink-0">
+        <Icon name="Info" size={16} className="text-cyan-400" />
+        <span className="font-orbitron text-sm font-bold text-cyan-300">СПРАВКА / О ПРОГРАММЕ</span>
+      </div>
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+
+        {/* Hero copyright block */}
+        <div className="relative glass-panel-strong rounded-2xl p-6 border neon-border overflow-hidden">
+          <div className="absolute inset-0 cyber-grid opacity-30" />
+          <div className="relative z-10 flex items-center gap-6">
+            <div className="w-16 h-16 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 animate-neon-pulse">
+              <span className="font-orbitron text-2xl font-black neon-text-cyan">HF</span>
+            </div>
+            <div>
+              <div className="font-orbitron text-xl font-black neon-text-cyan tracking-wider mb-1">HYBRID FLOW + ЕЦСУ</div>
+              <div className="text-sm text-cyan-300/70">Гибридная ОС и система управления инцидентами</div>
+              <div className="text-xs text-cyan-400/50 mt-1 font-mono">Версия 1.0.0 • Сборка 2026.05.29</div>
+            </div>
+          </div>
+          <div className="relative z-10 mt-4 pt-4 border-t border-cyan-500/15">
+            <div className="flex items-center gap-2">
+              <Icon name="Copyright" size={14} className="text-cyan-400/60" />
+              <span className="text-sm text-cyan-200 font-medium">Николаев Владимир Владимирович, 2026. Все права защищены.</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Info grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { label: "Разработчик", value: "Николаев В.В.", icon: "User" },
+            { label: "Лицензия", value: "Определяется правообладателем", icon: "FileCheck" },
+            { label: "Коммерческое использование", value: "По письменному согласованию", icon: "Handshake" },
+            { label: "Распространение", value: "С разрешения правообладателя", icon: "Share2" },
+          ].map((item) => (
+            <div key={item.label} className="glass-panel rounded-xl p-4 border neon-border">
+              <div className="flex items-center gap-2 mb-2">
+                <Icon name={item.icon} fallback="Circle" size={14} className="text-cyan-400/60" />
+                <span className="text-xs text-cyan-400/50">{item.label}</span>
+              </div>
+              <div className="text-sm font-medium text-cyan-200">{item.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* EULA button + modal */}
+        <div className="glass-panel rounded-xl p-4 border neon-border">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Icon name="ScrollText" size={16} className="text-yellow-400" />
+              <span className="text-sm font-semibold text-cyan-200">Лицензионное соглашение (EULA)</span>
+            </div>
+            <button
+              onClick={() => setEulaOpen(!eulaOpen)}
+              className={`text-xs px-3 py-1.5 rounded-lg border transition-all font-medium
+                ${eulaOpen ? "bg-cyan-500/20 border-cyan-500/40 neon-text-cyan" : "border-cyan-500/25 text-cyan-400/70 hover:border-cyan-500/40 hover:text-cyan-300"}`}
+            >
+              {eulaOpen ? "Свернуть" : "Читать соглашение"}
+            </button>
+          </div>
+
+          {eulaOpen && (
+            <div className="space-y-3 animate-fade-in-scale">
+              <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-lg px-3 py-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <Icon name="AlertTriangle" size={12} className="text-yellow-400" />
+                  <span className="text-xs font-semibold text-yellow-400">Обязательно к прочтению</span>
+                </div>
+                <span className="text-xs text-yellow-400/70">Используя данное ПО, вы подтверждаете согласие со всеми нижеперечисленными условиями.</span>
+              </div>
+              {eulaItems.map((item, i) => (
+                <div key={i} className="flex gap-3 p-3 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
+                  <span className="font-orbitron text-xs font-bold neon-text-cyan flex-shrink-0 mt-0.5">{i + 1}.</span>
+                  <span className="text-sm text-cyan-200/80 leading-relaxed">{item}</span>
+                </div>
+              ))}
+              <div className="text-xs text-cyan-400/40 text-center pt-1">
+                HYBRID FLOW EULA v1.0 • Правообладатель: Николаев Владимир Владимирович
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Component list */}
+        <div className="glass-panel rounded-xl p-4 border neon-border">
+          <div className="text-xs font-orbitron text-cyan-400/50 tracking-widest mb-3 uppercase">Компоненты системы</div>
+          <div className="space-y-2">
+            {[
+              { name: "HYBRID FLOW OS", desc: "Гибридная операционная система", version: "1.0.0" },
+              { name: "ЕЦСУ", desc: "Единая Центральная Система Управления", version: "1.0.0" },
+              { name: "IoT Брокер (MQTT)", desc: "Mosquitto — локальный брокер сообщений", version: "2.1.3" },
+              { name: "ИИ-движок", desc: "Llama 3 8B GGUF via Ollama", version: "3.8.0" },
+            ].map((c) => (
+              <div key={c.name} className="flex items-center justify-between py-2 border-b border-cyan-500/10 last:border-0">
+                <div>
+                  <span className="text-sm text-cyan-200 font-medium">{c.name}</span>
+                  <span className="text-xs text-cyan-400/50 ml-3">{c.desc}</span>
+                </div>
+                <span className="text-xs text-cyan-400/40 font-mono">v{c.version}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─── Boot Screen ──────────────────────────────────────────────────────────────
+function BootScreen({ onDone }: { onDone: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState(0);
+
+  const phases = [
+    "Инициализация ядра HF-Kernel 5.4.2...",
+    "Загрузка модулей безопасности...",
+    "Запуск IoT-брокера Mosquitto...",
+    "Инициализация ИИ-движка Llama 3 8B...",
+    "Монтирование зашифрованной БД...",
+    "Система готова.",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        const next = p + 2;
+        setPhase(Math.floor((next / 100) * phases.length));
+        if (next >= 100) {
+          clearInterval(interval);
+          setTimeout(onDone, 600);
+        }
+        return Math.min(next, 100);
+      });
+    }, 40);
+    return () => clearInterval(interval);
+  }, [onDone]);
+
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#020810] relative overflow-hidden">
+      {/* Background grid */}
+      <div className="absolute inset-0 cyber-grid opacity-40" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-cyan-500/6 rounded-full blur-3xl" />
+
+      {/* Corner brackets */}
+      {[
+        "top-6 left-6 border-t-2 border-l-2",
+        "top-6 right-6 border-t-2 border-r-2",
+        "bottom-6 left-6 border-b-2 border-l-2",
+        "bottom-6 right-6 border-b-2 border-r-2",
+      ].map((cls, i) => (
+        <div key={i} className={`absolute w-10 h-10 border-cyan-400/50 ${cls}`} />
+      ))}
+
+      <div className="relative z-10 flex flex-col items-center gap-8 w-80">
+        {/* Logo */}
+        <div className="text-center">
+          <div className="font-orbitron text-5xl font-black neon-text-cyan tracking-[0.2em] mb-2">
+            HYBRID
+          </div>
+          <div className="font-orbitron text-5xl font-black text-cyan-400/40 tracking-[0.2em]">
+            FLOW
+          </div>
+          <div className="w-32 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent mx-auto mt-3" />
+        </div>
+
+        {/* Developer line */}
+        <div className="text-center space-y-1">
+          <div className="text-xs text-cyan-400/50 tracking-widest uppercase font-orbitron">Разработчик</div>
+          <div className="text-sm text-cyan-200/80 font-medium">Николаев Владимир Владимирович</div>
+          <div className="text-xs text-cyan-400/35">HYBRID FLOW + ЕЦСУ • 2026</div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="w-full space-y-3">
+          <div className="h-1 w-full bg-cyan-500/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300 rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(0,245,255,0.6)]"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-cyan-400/50 font-mono min-h-4">
+              {phases[Math.min(phase, phases.length - 1)]}
+            </span>
+            <span className="font-orbitron text-xs neon-text-cyan">{progress}%</span>
+          </div>
+        </div>
+
+        {/* Copyright footer */}
+        <div className="text-center border-t border-cyan-500/15 pt-4 w-full">
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <Icon name="Copyright" size={11} className="text-cyan-400/35" />
+            <span className="text-[11px] text-cyan-400/35">Николаев Владимир Владимирович, 2026. Все права защищены.</span>
+          </div>
+          <div className="text-[10px] text-cyan-400/25">Лицензия определяется правообладателем</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Index() {
+  const [booting, setBooting] = useState(true);
   const [view, setView] = useState<AppView>("desktop");
   const [role] = useState<UserRole>("analyst");
   const [time, setTime] = useState(
@@ -771,6 +987,8 @@ export default function Index() {
     }, 1000);
     return () => clearInterval(t);
   }, []);
+
+  if (booting) return <BootScreen onDone={() => setBooting(false)} />;
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#060c14]">
@@ -788,6 +1006,7 @@ export default function Index() {
         {view === "market" && <MarketView />}
         {view === "users" && <UsersView />}
         {view === "settings" && <SettingsView />}
+        {view === "about" && <AboutView />}
       </div>
 
       <Taskbar active={view} onNav={setView} />
