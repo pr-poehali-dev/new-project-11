@@ -1122,7 +1122,9 @@ function InstallWizard({ onAccept }: { onAccept: () => void }) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Index() {
   const [booting, setBooting] = useState(true);
-  const [wizardDone, setWizardDone] = useState(false);
+  const [wizardDone, setWizardDone] = useState(
+    () => localStorage.getItem("hf_eula_accepted") === "1"
+  );
   const [view, setView] = useState<AppView>("desktop");
   const [role] = useState<UserRole>("analyst");
   const [time, setTime] = useState(
@@ -1137,7 +1139,10 @@ export default function Index() {
   }, []);
 
   if (booting) return <BootScreen onDone={() => setBooting(false)} />;
-  if (!wizardDone) return <InstallWizard onAccept={() => setWizardDone(true)} />;
+  if (!wizardDone) return <InstallWizard onAccept={() => {
+    localStorage.setItem("hf_eula_accepted", "1");
+    setWizardDone(true);
+  }} />;
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#060c14]">
