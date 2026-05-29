@@ -756,6 +756,14 @@ function SettingsView() {
                 <span className="text-xs text-cyan-400/50">Коммерческое использование</span>
                 <span className="text-xs text-yellow-400/80 font-mono">По согласованию</span>
               </div>
+              <div className="flex justify-between items-center pt-1 border-t border-cyan-500/10">
+                <span className="text-xs text-cyan-400/50">Телефон</span>
+                <a href="tel:+79069612034" className="text-xs text-cyan-300/80 font-mono hover:neon-text-cyan transition-colors">+7 906 961-20-34</a>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-cyan-400/50">E-mail</span>
+                <a href="mailto:nikolaevvladimir77@yandex.ru" className="text-xs text-cyan-300/80 font-mono hover:neon-text-cyan transition-colors">nikolaevvladimir77@yandex.ru</a>
+              </div>
             </div>
             <div className="bg-cyan-500/5 rounded-lg px-3 py-2 text-[11px] text-cyan-400/50 leading-relaxed border border-cyan-500/10">
               Исходный код, дизайн интерфейса, документация и сопутствующие материалы защищены авторским правом.
@@ -1017,9 +1025,104 @@ function BootScreen({ onDone }: { onDone: () => void }) {
   );
 }
 
+// ─── Install Wizard ───────────────────────────────────────────────────────────
+function InstallWizard({ onAccept }: { onAccept: () => void }) {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#020810] relative overflow-hidden">
+      <div className="absolute inset-0 cyber-grid opacity-30" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-cyan-500/5 rounded-full blur-3xl" />
+
+      {[
+        "top-6 left-6 border-t-2 border-l-2",
+        "top-6 right-6 border-t-2 border-r-2",
+        "bottom-6 left-6 border-b-2 border-l-2",
+        "bottom-6 right-6 border-b-2 border-r-2",
+      ].map((cls, i) => (
+        <div key={i} className={`absolute w-10 h-10 border-cyan-400/40 ${cls}`} />
+      ))}
+
+      <div className="relative z-10 w-[480px] glass-panel-strong rounded-2xl border neon-border p-8 space-y-6 animate-fade-in-scale">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center mx-auto mb-3">
+            <Icon name="PackageOpen" size={24} className="neon-text-cyan" />
+          </div>
+          <div className="font-orbitron text-xl font-black neon-text-cyan tracking-wider">МАСТЕР УСТАНОВКИ</div>
+          <div className="text-xs text-cyan-400/50 tracking-widest uppercase font-orbitron">HYBRID FLOW + ЕЦСУ v1.0.0</div>
+        </div>
+
+        {/* Notice block */}
+        <div className="bg-yellow-500/6 border border-yellow-500/25 rounded-xl p-4 space-y-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Icon name="AlertTriangle" size={14} className="text-yellow-400 flex-shrink-0" />
+            <span className="text-xs font-semibold text-yellow-400 font-orbitron tracking-wide">ЛИЦЕНЗИОННОЕ УВЕДОМЛЕНИЕ</span>
+          </div>
+          <p className="text-sm text-yellow-200/80 leading-relaxed">
+            Данное ПО принадлежит <span className="text-yellow-300 font-semibold">Николаеву В. В.</span> Продолжив установку, вы соглашаетесь с лицензионным соглашением (LICENSE.txt).
+          </p>
+        </div>
+
+        {/* Key terms */}
+        <div className="space-y-2">
+          <div className="text-xs font-orbitron text-cyan-400/50 tracking-widest uppercase mb-2">Ключевые условия</div>
+          {[
+            "Все права на ПО принадлежат Николаеву Владимиру Владимировичу",
+            "Коммерческое использование требует письменного согласия",
+            "Удаление атрибуции правообладателя запрещено",
+          ].map((item, i) => (
+            <div key={i} className="flex gap-2.5 items-start">
+              <span className="font-orbitron text-[10px] font-bold neon-text-cyan mt-0.5 flex-shrink-0">{i + 1}.</span>
+              <span className="text-xs text-cyan-200/70 leading-relaxed">{item}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Contact */}
+        <div className="bg-cyan-500/5 rounded-lg px-3 py-2.5 border border-cyan-500/15 flex items-center justify-between">
+          <span className="text-xs text-cyan-400/50">По вопросам лицензирования:</span>
+          <div className="text-right">
+            <div className="text-xs text-cyan-300/80 font-mono">+7 906 961-20-34</div>
+            <div className="text-[10px] text-cyan-400/50 font-mono">nikolaevvladimir77@yandex.ru</div>
+          </div>
+        </div>
+
+        {/* Checkbox + button */}
+        <div className="space-y-4">
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <div
+              onClick={() => setChecked(!checked)}
+              className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all
+                ${checked ? "bg-cyan-500/30 border-cyan-400 shadow-[0_0_8px_rgba(0,245,255,0.3)]" : "border-cyan-500/30 group-hover:border-cyan-500/60"}`}
+            >
+              {checked && <Icon name="Check" size={12} className="neon-text-cyan" />}
+            </div>
+            <span className="text-xs text-cyan-300/70 leading-relaxed">
+              Я прочитал(а) и соглашаюсь с условиями лицензионного соглашения
+            </span>
+          </label>
+
+          <button
+            onClick={() => checked && onAccept()}
+            className={`w-full py-3 rounded-xl font-orbitron text-sm font-bold tracking-wider transition-all duration-200
+              ${checked
+                ? "bg-cyan-500/20 border border-cyan-500/50 neon-text-cyan hover:bg-cyan-500/30 hover:shadow-[0_0_20px_rgba(0,245,255,0.2)] cursor-pointer"
+                : "bg-white/5 border border-white/10 text-white/20 cursor-not-allowed"
+              }`}
+          >
+            ПРИНЯТЬ И ПРОДОЛЖИТЬ
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Index() {
   const [booting, setBooting] = useState(true);
+  const [wizardDone, setWizardDone] = useState(false);
   const [view, setView] = useState<AppView>("desktop");
   const [role] = useState<UserRole>("analyst");
   const [time, setTime] = useState(
@@ -1034,6 +1137,7 @@ export default function Index() {
   }, []);
 
   if (booting) return <BootScreen onDone={() => setBooting(false)} />;
+  if (!wizardDone) return <InstallWizard onAccept={() => setWizardDone(true)} />;
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#060c14]">
